@@ -1,14 +1,14 @@
 # kball3
 
-ZMK firmware config for kball3, a standalone trackball + 3-button device using
-Seeed XIAO nRF52840 / XIAO BLE.
+Seeed XIAO nRF52840 / XIAO BLE を使った、独立型トラックボール + 3ボタンデバイス
+`kball3` のZMKファームウェア設定です。
 
-The planned personal repository name is `kotobo3`, following the same naming
-idea as `kotobo18` for the customized `kgrid18` firmware.
+現時点では、リポジトリ名、デバイス名、Bluetooth表示名を `kball3` として進めます。
+将来的に必要があれば、個人カスタム用リポジトリ名として `kotobo3` へのリネームも検討します。
 
-## Current PCB Pin Plan
+## 現在のPCBピン割り当て
 
-Keys are direct GPIO switches:
+キーは行列ではなく、各GPIOからスイッチを通ってGNDへ落とす直結配線です。
 
 ```text
 BTN1 -> XIAO D3 -> switch -> GND
@@ -16,7 +16,7 @@ BTN2 -> XIAO D4 -> switch -> GND
 BTN3 -> XIAO D5 -> switch -> GND
 ```
 
-Mouse sensor FPC pin order on this PCB:
+このPCBでのマウスセンサー用FPCピン順:
 
 ```text
 FPC pin 1: GND
@@ -27,9 +27,9 @@ FPC pin 5: CS     -> XIAO D7
 FPC pin 6: 3V3
 ```
 
-The first firmware scaffold builds the 3 direct keys.
+まずは3つの直結キーと基本レイヤー構成をビルドできる状態にしています。
 
-## Current Keymap Plan
+## 現在のキーマップ案
 
 ```text
 Base:
@@ -54,13 +54,15 @@ BTN2 = Right click
 BTN3 = Base
 ```
 
-PAW3222 support is planned through the author's ZMK driver:
+PAW3222センサーは、作者のZMKドライバーを使う予定です。
 
 ```text
 https://github.com/sekigon-gonnoc/zmk-driver-paw3222
 ```
 
-The module has been added to `config/west.yml`, and `PAW3222` is enabled in the
-shield Kconfig. The actual SPI overlay is intentionally left disabled until the
-XIAO BLE D6/D7/D8/D9 aliases are resolved to nRF GPIO port/pin numbers for
-`NRF_PSEL(...)`.
+このモジュールは `config/west.yml` に追加済みで、shield Kconfig 側でも `PAW3222`
+を有効化しています。
+
+ただし、実際のSPI overlayはまだ有効化していません。作者ドライバーのoverlay例では
+`NRF_PSEL(...)` にnRF52840の実GPIO番号を指定する必要があります。そのため、XIAO BLEの
+`D6/D7/D8/D9` がどの `gpio0/gpio1` ピンに対応するかを確認してから反映します。
