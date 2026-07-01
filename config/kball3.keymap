@@ -7,28 +7,24 @@
     combos {
         compatible = "zmk,combos";
 
-        ime_toggle {
-            bindings = <&kp LC(SPACE)>;
-            key-positions = <0 1>;
-            timeout-ms = <50>;
+        L01 {
+            bindings = <&mo 1>;
+            key-positions = <2 0 1>;
         };
 
-        enter_combo {
-            bindings = <&kp ENTER>;
-            key-positions = <1 2>;
-            timeout-ms = <50>;
+        L02 {
+            bindings = <&mo 2>;
+            key-positions = <0>;
         };
 
-        bluetooth_layer_toggle {
-            bindings = <&tog 1>;
-            key-positions = <0 2>;
-            timeout-ms = <50>;
+        B01 {
+            bindings = <&mo 3>;
+            key-positions = <0>;
         };
 
-        utility_layer_toggle {
-            bindings = <&tog 2>;
-            key-positions = <0 1 2>;
-            timeout-ms = <50>;
+        B02 {
+            bindings = <&mo 4>;
+            key-positions = <2>;
         };
     };
 
@@ -38,13 +34,29 @@
         default_layer {
             display-name = "Base";
             bindings = <
-&kp BACKSPACE
+&kp RIGHT
 &mkp LCLK
-&kp SPACE
+&kp LEFT
             >;
         };
 
-        bluetooth_layer {
+        L01 {
+            bindings = <
+&mkp RCLK
+&trans
+&mo 0
+            >;
+        };
+
+        L02 {
+            bindings = <
+&kp SPACE
+&trans
+&mo 0
+            >;
+        };
+
+        blt01 {
             display-name = "BT";
             bindings = <
 &bt BT_SEL 0
@@ -53,7 +65,7 @@
             >;
         };
 
-        utility_layer {
+        blt02 {
             display-name = "Utility";
             bindings = <
 &mkp RCLK
