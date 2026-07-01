@@ -9,22 +9,22 @@
 
         L01 {
             bindings = <&mo 1>;
-            key-positions = <2 0 1>;
+            key-positions = <0 1>;
         };
 
         L02 {
             bindings = <&mo 2>;
-            key-positions = <0>;
+            key-positions = <1 2>;
         };
 
         B01 {
             bindings = <&mo 3>;
-            key-positions = <0>;
+            key-positions = <0 2>;
         };
 
         B02 {
             bindings = <&mo 4>;
-            key-positions = <2>;
+            key-positions = <2 0 1>;
         };
     };
 
