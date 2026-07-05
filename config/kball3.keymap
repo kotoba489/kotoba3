@@ -54,8 +54,8 @@
 
         layer_3 {
             bindings = <
-&kp BACKSPACE
-&kp SPACE
+&bt BT_SEL 1
+&bt BT_SEL 2
 &to 0
             >;
         };
