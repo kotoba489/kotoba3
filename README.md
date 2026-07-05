@@ -61,31 +61,6 @@ FPC pin 6: 3V3
 
 まずは3つの直結キーと基本レイヤー構成をビルドできる状態にしています。
 
-## 現在のキーマップ案
-
-```text
-Base:
-BTN1 = Backspace
-BTN2 = Left click
-BTN3 = Space
-
-Combo:
-BTN1 + BTN2 = LC(SPACE)
-BTN2 + BTN3 = Enter
-BTN1 + BTN3 = Bluetooth layer toggle
-BTN1 + BTN2 + BTN3 = Mouse/Utility layer toggle
-
-Bluetooth layer:
-BTN1 = BT_SEL 0
-BTN2 = BT_SEL 1
-BTN3 = Base
-
-Mouse/Utility layer:
-BTN1 = Middle click
-BTN2 = Right click
-BTN3 = Base
-```
-
 PAW3222センサーは、作者のZMKドライバーを使う予定です。
 
 ```text
