@@ -42,8 +42,8 @@
 
         L01 {
             bindings = <
-&mkp RCLK
-&kp BACKSPACE
+&bt BT_CLR_ALL
+&bt BT_SEL 0
 &to 0
             >;
         };
