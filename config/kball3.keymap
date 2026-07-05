@@ -34,9 +34,9 @@
         default_layer {
             display-name = "Base";
             bindings = <
-&mkp LCLK
 &mkp RCLK
 &to 1
+&mkp LCLK
             >;
         };
 
