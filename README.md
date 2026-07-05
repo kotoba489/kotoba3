@@ -63,6 +63,15 @@ https://github.com/sekigon-gonnoc/zmk-driver-paw3222
 このモジュールは `config/west.yml` に追加済みで、shield Kconfig 側でも `PAW3222`
 を有効化しています。
 
-ただし、実際のSPI overlayはまだ有効化していません。作者ドライバーのoverlay例では
-`NRF_PSEL(...)` にnRF52840の実GPIO番号を指定する必要があります。そのため、XIAO BLEの
-`D6/D7/D8/D9` がどの `gpio0/gpio1` ピンに対応するかを確認してから反映します。
+SPI overlayも有効化済みです。作者ドライバーのoverlay例では `NRF_PSEL(...)` に
+nRF52840の実GPIO番号を指定する必要があるため、XIAO BLEのDピンを以下のように展開しています。
+
+```text
+MOTION -> XIAO D6 -> P1.11 -> irq-gpios
+CS     -> XIAO D7 -> P1.12 -> cs-gpios
+SDIO   -> XIAO D8 -> P1.13 -> SPIM_MOSI / SPIM_MISO
+SCLK   -> XIAO D9 -> P1.14 -> SPIM_SCK
+```
+
+XIAO BLEとセンサー変換基板はPCB裏面配置なので、KiCad表示上の見た目ではなくネット名と
+XIAOピン名を基準に確認しています。

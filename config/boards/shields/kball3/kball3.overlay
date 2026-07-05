@@ -31,19 +31,38 @@
     };
 };
 
-/*
- * Reserved for PAW3222 sensor wiring on the current PCB.
- *
- * The sekigon-gonnoc/zmk-driver-paw3222 overlay uses nRF GPIO port/pin
- * numbers in NRF_PSEL(...), so do not paste xiao_d aliases directly into
- * the SPI pinctrl block. Resolve the XIAO BLE D6/D7/D8/D9 mapping before
- * enabling this node.
- *
- *   MOTION -> xiao_d 6
- *   CS     -> xiao_d 7
- *   SDIO   -> xiao_d 8
- *   SCLK   -> xiao_d 9
- *
- * Driver reference:
- *   https://github.com/sekigon-gonnoc/zmk-driver-paw3222
- */
+&pinctrl {
+    kball3_paw3222_spi2_default: kball3_paw3222_spi2_default {
+        group1 {
+            psels = <NRF_PSEL(SPIM_SCK, 1, 14)>,  /* XIAO D9: SCLK */
+                    <NRF_PSEL(SPIM_MOSI, 1, 13)>, /* XIAO D8: SDIO */
+                    <NRF_PSEL(SPIM_MISO, 1, 13)>; /* XIAO D8: SDIO */
+        };
+    };
+
+    kball3_paw3222_spi2_sleep: kball3_paw3222_spi2_sleep {
+        group1 {
+            psels = <NRF_PSEL(SPIM_SCK, 1, 14)>,
+                    <NRF_PSEL(SPIM_MOSI, 1, 13)>,
+                    <NRF_PSEL(SPIM_MISO, 1, 13)>;
+            low-power-enable;
+        };
+    };
+};
+
+&spi2 {
+    status = "okay";
+    compatible = "nordic,nrf-spim";
+    pinctrl-0 = <&kball3_paw3222_spi2_default>;
+    pinctrl-1 = <&kball3_paw3222_spi2_sleep>;
+    pinctrl-names = "default", "sleep";
+    cs-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>; /* XIAO D7: CS */
+
+    trackball: trackball@0 {
+        status = "okay";
+        compatible = "pixart,paw3222";
+        reg = <0>;
+        spi-max-frequency = <2000000>;
+        irq-gpios = <&gpio1 11 GPIO_ACTIVE_LOW>; /* XIAO D6: MOTION */
+    };
+};
