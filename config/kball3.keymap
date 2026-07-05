@@ -34,17 +34,17 @@
         default_layer {
             display-name = "Base";
             bindings = <
+&mkp LCLK
 &mkp RCLK
 &to 1
-&mkp LCLK
             >;
         };
 
         L01 {
             bindings = <
 &mkp RCLK
-&to 0
 &kp BACKSPACE
+&to 0
             >;
         };
 
