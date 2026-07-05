@@ -43,8 +43,8 @@
         L01 {
             bindings = <
 &mkp RCLK
-&kp BACKSPACE
 &to 0
+&kp BACKSPACE
             >;
         };
 
