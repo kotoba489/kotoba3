@@ -7,24 +7,24 @@
     combos {
         compatible = "zmk,combos";
 
-        L01 {
-            bindings = <&to 1>;
+        L_02 {
+            bindings = <&to 2>;
             key-positions = <0 1>;
         };
 
-        L02 {
-            bindings = <&to 2>;
-            key-positions = <1 2>;
-        };
-
         B01 {
-            bindings = <&to 3>;
-            key-positions = <0 2>;
+            bindings = <&to 4>;
+            key-positions = <2 0>;
         };
 
         B02 {
-            bindings = <&to 4>;
+            bindings = <&to 5>;
             key-positions = <2 0 1>;
+        };
+
+        L_03 {
+            bindings = <&to 3>;
+            key-positions = <1 2>;
         };
     };
 
@@ -34,9 +34,9 @@
         default_layer {
             display-name = "Base";
             bindings = <
-&kp RIGHT
+&mkp RCLK
 &mkp LCLK
-&kp LEFT
+&to 1
             >;
         };
 
@@ -48,10 +48,18 @@
             >;
         };
 
-        L02 {
+        layer_2 {
             bindings = <
+&kp RIGHT_ARROW
+&kp LEFT_ARROW
+&to 0
+            >;
+        };
+
+        layer_3 {
+            bindings = <
+&kp BACKSPACE
 &kp SPACE
-&kp RET
 &to 0
             >;
         };
@@ -66,7 +74,7 @@
         };
 
         blt02 {
-            display-name = "Utility";
+            display-name = "BT";
             bindings = <
 &bt BT_SEL 2
 &bt BT_CLR_ALL
