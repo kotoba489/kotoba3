@@ -19,7 +19,7 @@
         };
 
         B02 {
-            bindings = <&to 5>;
+            bindings = <&out OUT_BLE>;
             key-positions = <2 0 1>;
         };
 
@@ -45,7 +45,7 @@
             bindings = <
 &bt BT_CLR_ALL
 &bt BT_SEL 0
-&out OUT_BLE
+&to 0
             >;
         };
 
