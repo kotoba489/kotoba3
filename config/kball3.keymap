@@ -1,6 +1,7 @@
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/outputs.h>
 #include <dt-bindings/zmk/pointing.h>
 
 / {
@@ -44,7 +45,7 @@
             bindings = <
 &bt BT_CLR_ALL
 &bt BT_SEL 0
-&to 0
+&out OUT_BLE
             >;
         };
 
