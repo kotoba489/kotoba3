@@ -1,56 +1,41 @@
-# kball3 ZMK Firmware
+# kball3 ZMK ファームウェア
 
-ZMK Firmware repository for **kball3**, a custom BLE trackball keyboard built with **Seeed Studio XIAO nRF52840** and a **PMW3610 optical trackball sensor breakout board**.
+**kball3** は、Seeed Studio XIAO nRF52840 (Seeeduino XIAO BLE) と光学式トラックボールセンサー **PMW3610** ブレイクアウト基板を組み合わせた、Bluetooth LE 対応の 3 ボタン式トラックボールキーボード用 ZMK ファームウェアです。
 
 ---
 
-## 🛠 Hardware Mapping
+## 📌 ファームウェア構築の概要
 
-| Function | XIAO Pad | Pin Name | Description |
+### 1. ハードウェア構成とピン割当 (`kball3.kicad_pcb` 準拠)
+
+| 機能 | XIAO ピン | マイコン内部ピン | 役割 |
 | :--- | :--- | :--- | :--- |
-| **BTN1** | Pad 2 / D1 | `P0.03` | Left Click (`&mkp LCLK`) |
-| **BTN2** | Pad 3 / D2 | `P0.28` | Middle Click (`&mkp MCLK`) |
-| **BTN3** | Pad 4 / D3 | `P0.29` | Right Click (`&mkp RCLK`) |
-| **SCLK** | Pad 6 / D5 | `P0.05` | PMW3610 SPI Clock |
-| **SDIO** | Pad 5 / D4 | `P0.04` | PMW3610 SPI Data (Bi-directional) |
-| **nCS** | Pad 8 / D7 | `P1.12` | PMW3610 Chip Select |
-| **MOTION** | Pad 11 / D10 | `P1.15` | PMW3610 Motion Interrupt |
-| **VCC** | Pad 12 | `3V3` | Power Supply |
-| **GND** | Pad 13 | `GND` | Ground |
+| **BTN1** | D1 | `P0.03` | 左クリック (`&mkp LCLK`) |
+| **BTN2** | D2 | `P0.28` | 中クリック (`&mkp MCLK`) |
+| **BTN3** | D3 | `P0.29` | 右クリック (`&mkp RCLK`) |
+| **SCLK** | D5 | `P0.05` | PMW3610 SPI クロック |
+| **SDIO** | D4 | `P0.04` | PMW3610 SPI データ (双方向 3 線式) |
+| **nCS** | D7 | `P1.12` | PMW3610 チップセレクト |
+| **MOTION** | D10 | `P1.15` | PMW3610 モーション割り込み (IRQ) |
+| **VCC** | 3V3 | `3V3` | 電源供給 |
+| **GND** | GND | `GND` | グランド |
+
+### 2. ドライバ・機能モジュール構成
+- **PMW3610 センサードライバ**: `config/west.yml` にて `badjeff/zmk-pmw3610-driver` モジュールを取り込み。
+- **キー入力制御**: 3つの押しボタンを直接入力 (`zmk,kscan-gpio-direct`) として制御。
+- **Bluetooth 接続最適化**: Android スマートフォンや Mac との安定接続のため、BLE 送信出力を `+8dBm` に増幅し、接続パラメータを最適化。
+- **自動ビルド環境**: GitHub Actions (`.github/workflows/build.yml`) により、GitHub へのプッシュ時に自動で `zmk.uf2` を生成。
 
 ---
 
-## 🚀 How to Build & Flash Firmware
+## 🚀 ファームウェアのビルドと書き込み方法
 
-### 1. Push to GitHub
-If you haven't pushed this repository to GitHub yet, run the following commands on your Mac terminal:
+### 1. 自動ビルド (GitHub Actions)
+1. 本リポジトリの **Actions** タブを開きます。
+2. 実行されたワークフローから生成された `firmware.zip` をダウンロード・解凍して `zmk.uf2` ファイルを取得します。
 
-```bash
-cd /Users/kotoba489/.gemini/antigravity/scratch/kball3
-git remote add origin https://github.com/kotoba489/kball3.git
-git branch -M main
-git push -u origin main --force
-```
-
-### 2. Automatic GitHub Actions Build
-1. Go to your GitHub repository: `https://github.com/kotoba489/kball3`
-2. Click the **Actions** tab.
-3. Wait for the build workflow to finish (~3 minutes).
-4. Download the `firmware.zip` artifact from the completed workflow run.
-5. Extract `firmware.zip` to get `zmk.uf2`.
-
-### 3. Flash to XIAO nRF52840
-1. Connect your XIAO nRF52840 to your Mac via USB-C cable.
-2. Double-press the small **RESET** button on the XIAO board quickly.
-3. A USB mass storage drive named `XIAO-SENSE` (or `NO_NAME`) will appear on your Mac.
-4. Drag and drop `zmk.uf2` into the USB drive.
-5. The device will reboot automatically upon flashing completion.
-
----
-
-## 📱 Pairing with Android / Mac
-
-1. Turn on Bluetooth on your Android smartphone or Mac.
-2. Search for new Bluetooth devices.
-3. Select **`kball3`** from the list to pair.
-4. Test trackball cursor movement and mouse clicks!
+### 2. XIAO nRF52840 への書き込み
+1. XIAO nRF52840 を USB ケーブルで PC/Mac に接続します。
+2. XIAO 基板上の **RESET ボタンを 2 回連続で素早く押し**、ブートローダーモードに入れます。
+3. PC にマウントされた `XIAO-SENSE` (または `NO_NAME`) ドライブに `zmk.uf2` をドラッグ＆ドロップします。
+4. 自動的に書き込みが行われ、再起動後に Bluetooth デバイス `kball3` として使用可能になります。

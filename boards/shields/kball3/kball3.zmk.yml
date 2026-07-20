@@ -3,4 +3,4 @@ id: kball3
 name: kball3
 type: shield
 targets:
-  - seeed_xiao_nrf52840
+  - seeeduino_xiao_ble
