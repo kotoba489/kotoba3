@@ -1,84 +1,56 @@
-# kball3
+# kball3 ZMK Firmware
 
-Seeed XIAO nRF52840 / XIAO BLE を使った、独立型トラックボール + 3ボタンデバイス
-`kball3` のZMKファームウェア設定です。
+ZMK Firmware repository for **kball3**, a custom BLE trackball keyboard built with **Seeed Studio XIAO nRF52840** and a **PMW3610 optical trackball sensor breakout board**.
 
-現時点では、リポジトリ名、デバイス名、Bluetooth表示名を `kball3` として進めます。
-将来的に必要があれば、個人カスタム用リポジトリ名として `kotobo3` へのリネームも検討します。
+---
 
-## Bluetooth接続
+## 🛠 Hardware Mapping
 
-USB電源供給のみで起動した場合でも、PCとのBluetooth接続が復帰することを確認しています。
-電源OFF/ON後にペアリング解除や再接続操作を繰り返す必要が出ないよう、Bluetoothのbond/profile情報を
-フラッシュ上のNVSへ保持する設定を有効化しています。
+| Function | XIAO Pad | Pin Name | Description |
+| :--- | :--- | :--- | :--- |
+| **BTN1** | Pad 2 / D1 | `P0.03` | Left Click (`&mkp LCLK`) |
+| **BTN2** | Pad 3 / D2 | `P0.28` | Middle Click (`&mkp MCLK`) |
+| **BTN3** | Pad 4 / D3 | `P0.29` | Right Click (`&mkp RCLK`) |
+| **SCLK** | Pad 6 / D5 | `P0.05` | PMW3610 SPI Clock |
+| **SDIO** | Pad 5 / D4 | `P0.04` | PMW3610 SPI Data (Bi-directional) |
+| **nCS** | Pad 8 / D7 | `P1.12` | PMW3610 Chip Select |
+| **MOTION** | Pad 11 / D10 | `P1.15` | PMW3610 Motion Interrupt |
+| **VCC** | Pad 12 | `3V3` | Power Supply |
+| **GND** | Pad 13 | `GND` | Ground |
 
-`config/kball3.conf` では、以下の設定を追加しています。
+---
 
-```text
-CONFIG_SETTINGS=y
-CONFIG_BT_SETTINGS=y
-CONFIG_FLASH=y
-CONFIG_FLASH_PAGE_LAYOUT=y
-CONFIG_FLASH_MAP=y
-CONFIG_NVS=y
-CONFIG_SETTINGS_NVS=y
-CONFIG_MPU_ALLOW_FLASH_WRITE=y
+## 🚀 How to Build & Flash Firmware
+
+### 1. Push to GitHub
+If you haven't pushed this repository to GitHub yet, run the following commands on your Mac terminal:
+
+```bash
+cd /Users/kotoba489/.gemini/antigravity/scratch/kball3
+git remote add origin https://github.com/kotoba489/kball3.git
+git branch -M main
+git push -u origin main --force
 ```
 
-確認済みの挙動:
+### 2. Automatic GitHub Actions Build
+1. Go to your GitHub repository: `https://github.com/kotoba489/kball3`
+2. Click the **Actions** tab.
+3. Wait for the build workflow to finish (~3 minutes).
+4. Download the `firmware.zip` artifact from the completed workflow run.
+5. Extract `firmware.zip` to get `zmk.uf2`.
 
-```text
-1. USB電源供給で起動
-2. Bluetooth接続
-3. 電源OFF
-4. 再度電源ON
-5. 追加操作なしでBluetooth接続が復帰
-```
+### 3. Flash to XIAO nRF52840
+1. Connect your XIAO nRF52840 to your Mac via USB-C cable.
+2. Double-press the small **RESET** button on the XIAO board quickly.
+3. A USB mass storage drive named `XIAO-SENSE` (or `NO_NAME`) will appear on your Mac.
+4. Drag and drop `zmk.uf2` into the USB drive.
+5. The device will reboot automatically upon flashing completion.
 
-初回接続や接続情報のリセットが必要な場合は、キーマップ上の `BT_CLR_ALL`、`BT_SEL 0`、
-`OUT_BLE` を使ってBluetooth接続状態を再初期化します。
+---
 
-## 現在のPCBピン割り当て
+## 📱 Pairing with Android / Mac
 
-キーは行列ではなく、各GPIOからスイッチを通ってGNDへ落とす直結配線です。
-
-```text
-BTN1 -> XIAO D3 -> switch -> GND
-BTN2 -> XIAO D4 -> switch -> GND
-BTN3 -> XIAO D5 -> switch -> GND
-```
-
-このPCBでのマウスセンサー用FPCピン順:
-
-```text
-FPC pin 1: GND
-FPC pin 2: SCLK   -> XIAO D9
-FPC pin 3: SDIO   -> XIAO D8
-FPC pin 4: MOTION -> XIAO D6
-FPC pin 5: CS     -> XIAO D7
-FPC pin 6: 3V3
-```
-
-まずは3つの直結キーと基本レイヤー構成をビルドできる状態にしています。
-
-PAW3222センサーは、作者のZMKドライバーを使う予定です。
-
-```text
-https://github.com/sekigon-gonnoc/zmk-driver-paw3222
-```
-
-このモジュールは `config/west.yml` に追加済みで、shield Kconfig 側でも `PAW3222`
-を有効化しています。
-
-SPI overlayも有効化済みです。作者ドライバーのoverlay例では `NRF_PSEL(...)` に
-nRF52840の実GPIO番号を指定する必要があるため、XIAO BLEのDピンを以下のように展開しています。
-
-```text
-MOTION -> XIAO D6 -> P1.11 -> irq-gpios
-CS     -> XIAO D7 -> P1.12 -> cs-gpios
-SDIO   -> XIAO D8 -> P1.13 -> SPIM_MOSI / SPIM_MISO
-SCLK   -> XIAO D9 -> P1.14 -> SPIM_SCK
-```
-
-XIAO BLEとセンサー変換基板はPCB裏面配置なので、KiCad表示上の見た目ではなくネット名と
-XIAOピン名を基準に確認しています。
+1. Turn on Bluetooth on your Android smartphone or Mac.
+2. Search for new Bluetooth devices.
+3. Select **`kball3`** from the list to pair.
+4. Test trackball cursor movement and mouse clicks!

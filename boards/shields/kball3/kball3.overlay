@@ -1,0 +1,76 @@
+#include <dt-bindings/zmk/matrix_transform.h>
+#include <zephyr/dt-bindings/input/input-event-codes.h>
+#include <input/processors.dtsi>
+
+/ {
+    chosen {
+        zmk,kscan = &kscan0;
+        zmk,matrix_transform = &default_transform;
+    };
+
+    kscan0: kscan0 {
+        compatible = "zmk,kscan-gpio-direct";
+        wakeup-source;
+        input-gpios
+            = <&xiao_d 1 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)> // BTN1 (Left Click)
+            , <&xiao_d 2 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)> // BTN2 (Middle Click)
+            , <&xiao_d 3 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)> // BTN3 (Right Click)
+            ;
+    };
+
+    default_transform: keymap_transform0 {
+        compatible = "zmk,matrix-transform";
+        columns = <3>;
+        rows = <1>;
+        map = <
+            RC(0,0) RC(0,1) RC(0,2)
+        >;
+    };
+};
+
+&pinctrl {
+    spi0_default: spi0_default {
+        group1 {
+            psels = <NRF_PSEL(SPIM_SCK, 0, 5)>,     // D5 = P0.05
+                    <NRF_PSEL(SPIM_MOSI, 0, 4)>,    // D4 = P0.04 (SDIO)
+                    <NRF_PSEL(SPIM_MISO, 0, 4)>;    // D4 = P0.04 (SDIO)
+        };
+    };
+
+    spi0_sleep: spi0_sleep {
+        group1 {
+            psels = <NRF_PSEL(SPIM_SCK, 0, 5)>,
+                    <NRF_PSEL(SPIM_MOSI, 0, 4)>,
+                    <NRF_PSEL(SPIM_MISO, 0, 4)>;
+            low-power-enable;
+        };
+    };
+};
+
+&spi0 {
+    status = "okay";
+    compatible = "nordic,nrf-spim";
+    pinctrl-0 = <&spi0_default>;
+    pinctrl-1 = <&spi0_sleep>;
+    pinctrl-names = "default", "sleep";
+    cs-gpios = <&xiao_d 7 GPIO_ACTIVE_LOW>;         // D7 = P1.12 (nCS)
+
+    trackball: trackball@0 {
+        status = "okay";
+        compatible = "pixart,pmw3610";
+        reg = <0>;
+        spi-max-frequency = <2000000>;
+        irq-gpios = <&xiao_d 10 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>; // D10 = P1.15 (MOTION)
+        cpi = <600>;
+        evt-type = <INPUT_EV_REL>;
+        x-input-code = <INPUT_REL_X>;
+        y-input-code = <INPUT_REL_Y>;
+    };
+};
+
+/ {
+    trackball_listener {
+        compatible = "zmk,input-listener";
+        device = <&trackball>;
+    };
+};

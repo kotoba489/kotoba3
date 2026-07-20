@@ -1,0 +1,6 @@
+if SHIELD_KBALL3
+
+config ZMK_KEYBOARD_NAME
+    default "kball3"
+
+endif

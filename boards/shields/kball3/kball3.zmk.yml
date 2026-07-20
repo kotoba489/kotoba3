@@ -1,0 +1,6 @@
+file_format: "1"
+id: kball3
+name: kball3
+type: shield
+targets:
+  - seeed_xiao_nrf52840
