@@ -2,3 +2,7 @@
 include:
   - board: seeeduino_xiao_ble
     shield: kball3
+    artifact-name: kball3
+  - board: seeeduino_xiao_ble
+    shield: settings_reset
+    artifact-name: settings_reset
