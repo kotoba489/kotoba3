@@ -12,6 +12,7 @@
 // - Wire exit: > 14.6 mm width, flat base (no bottom lip)
 // - Supports: 1.5 mm diameter zirconia/ceramic balls
 // - No small recesses in the sensor cavity ceiling (completely flat)
+// - Solid top plate (ceiling) on the pedestal ears for strength and aesthetics.
 
 $fn = 100;
 
@@ -19,7 +20,10 @@ $fn = 100;
 pedestal_w = 36.5; // X width
 pedestal_d = 30.0; // Y depth
 pedestal_fillet_r = 0.5;
-pedestal_h = 6.7;  // matching PCB-to-lens-top height
+
+// Pedestal height raised to 8.0mm to provide a 1.3mm solid top plate
+// while keeping the sensor cavity at exactly 6.7mm height.
+pedestal_h = 8.0;
 
 // Bounding box total height
 total_h = 14.0;
@@ -36,7 +40,7 @@ pcb_d = 23.8;
 pcb_clearance = 0.3; // 0.3mm tolerance
 cavity_w = pcb_w + pcb_clearance;
 cavity_d = pcb_d + pcb_clearance;
-cavity_h = pedestal_h; // 6.7mm
+cavity_h = 6.7; // Exactly matching PCB-to-lens-top height
 
 // Lens reference plane (flange) to ball surface
 optical_dist = 2.4; 
@@ -89,11 +93,12 @@ difference() {
     }
 
     // 2. Sensor board cavity (from bottom)
-    // Flat ceiling at Z = cavity_h, no recesses
+    // Flat ceiling at Z = cavity_h, leaving a solid 1.3mm ceiling on pedestal ears
     translate([-cavity_w / 2, -cavity_d / 2, -0.1])
         cube([cavity_w, cavity_d, cavity_h + 0.1]);
 
     // 3. Jumper wire exit (flat base, no bottom lip)
+    // Height is cavity_h (6.7mm) to maintain the solid 1.3mm top plate above it
     translate([0, -pedestal_d / 2 + wire_exit_d / 2 - 0.1, cavity_h / 2])
         cube([wire_exit_w, wire_exit_d + 0.2, cavity_h + 0.2], center = true);
 
