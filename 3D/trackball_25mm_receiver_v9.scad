@@ -9,6 +9,8 @@
 //   to strictly maintain the 2.4 mm optical distance (ball bottom at Z=9.1, lens ceiling at Z=6.7).
 // - Keeps the 0.5 mm bottom outer fillet, 0.5 mm cavity entrance chamfer, and 1.0 mm lens hole fillet.
 // - Keeps 36.5 mm x 30.0 mm pedestal base dimensions with 0.5 mm corner fillets.
+// - Pedestal height adjusted to 7.5 mm to match the 7.5 mm case support pillars,
+//   leaving a solid 0.8 mm top plate above the 6.7 mm cavity.
 
 $fn = 100;
 
@@ -18,8 +20,8 @@ pedestal_d = 30.0; // Y depth
 pedestal_fillet_r = 0.5; // Vertical corner fillet radius
 pedestal_bottom_fillet_r = 0.5; // Bottom edge fillet radius
 
-// Pedestal height (PCB-to-lens-top height is 6.7mm, pedestal is 8.0mm for solid ears)
-pedestal_h = 8.0;
+// Pedestal height adjusted to exactly 7.5 mm to match keyboard support pillars
+pedestal_h = 7.5;
 
 // Bounding box total height raised to 17.0 mm for an even deeper cup
 total_h = 17.0;
@@ -59,7 +61,6 @@ support_pocket_r = support_r + 0.1; // 0.1mm clearance for loose fit
 contact_angle = 45; 
 
 // Distance from ball center to support ball centers
-// Stays the same as v8 to keep the ball centered at Z=21.6
 support_dist_to_center = ball_r + support_r; // 13.25
 support_xy_r = support_dist_to_center * sin(contact_angle);
 support_z = ball_center_z - support_dist_to_center * cos(contact_angle);

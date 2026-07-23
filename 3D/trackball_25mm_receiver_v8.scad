@@ -4,11 +4,13 @@
 // Custom 25mm trackball receiver for PMW3610 breakout sensor board (Version 8).
 //
 // Updates in v8:
-// - Added a 0.5 mm fillet to the bottom outer edge of the pedestal (using a hull of spheres and cylinders).
-// - Added a 0.5 mm chamfer to the bottom inner edge of the sensor cavity entrance (for clean printing and smooth fit).
-// - Added a 1.0 mm fillet to the bottom edge of the optical window hole (where it meets the cavity ceiling).
+// - Added a 0.5 mm fillet to the bottom outer edge of the pedestal.
+// - Added a 0.5 mm chamfer to the bottom inner edge of the sensor cavity entrance.
+// - Added a 1.0 mm fillet to the bottom edge of the optical window hole.
 // - Maintains total height at 15.5 mm and support ball contact angle at 45 degrees.
 // - Maintains 36.5 mm x 30.0 mm pedestal base dimensions with 0.5 mm corner fillets.
+// - Pedestal height adjusted to 7.5 mm to match the 7.5 mm case support pillars,
+//   leaving a solid 0.8 mm top plate above the 6.7 mm cavity.
 
 $fn = 100;
 
@@ -18,8 +20,8 @@ pedestal_d = 30.0; // Y depth
 pedestal_fillet_r = 0.5; // Vertical corner fillet radius
 pedestal_bottom_fillet_r = 0.5; // Bottom edge fillet radius
 
-// Pedestal height (PCB-to-lens-top height is 6.7mm, pedestal is 8.0mm for solid ears)
-pedestal_h = 8.0;
+// Pedestal height adjusted to exactly 7.5 mm to match keyboard support pillars
+pedestal_h = 7.5;
 
 // Bounding box total height
 total_h = 15.5;
@@ -114,7 +116,6 @@ difference() {
         cube([cavity_w, cavity_d, cavity_h + 0.1]);
 
     // 2b. Chamfer at the bottom entrance of the cavity (0.5mm, 45-degree angle)
-    // Helps with clean printing and easy insertion of PCB
     hull() {
         translate([0, 0, -0.1])
             cube([cavity_w + 1.0, cavity_d + 1.0, 0.01], center = true);
@@ -135,7 +136,6 @@ difference() {
         cylinder(h = total_h + 1.0, r = optical_window_r);
 
     // 5b. 1.0 mm fillet at the bottom of the optical window (Z = 6.7)
-    // Flare radius is 4.25 + 1.0 = 5.25 mm.
     translate([0, 0, cavity_h]) {
         difference() {
             cylinder(h = 1.001, r = optical_window_r + 1.0, $fn = 100);
